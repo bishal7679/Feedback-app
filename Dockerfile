@@ -1,17 +1,17 @@
-FROM node:14
+# Fetching the latest node image on apline linux
+FROM node:alpine AS development
 
-# Setting working directory. All the path will be relative to WORKDIR
-WORKDIR /usr/src/app
+# Declaring env
+ENV NODE_ENV development
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+# Setting up the work directory
+WORKDIR /react-app
 
+# Installing dependencies
+COPY ./package.json /react-app
 RUN npm install
-RUN npm install -g concurrently
 
-# Bundle app source
+# Copying all the files in our project
 COPY . .
 
 EXPOSE 3000
