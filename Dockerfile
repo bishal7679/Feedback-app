@@ -1,18 +1,15 @@
-# Fetching the latest node image on apline linux
-FROM node:alpine AS development
+# Our node app is based on `18-alpine` image 
+FROM node:18-alpine
 
-# Declaring env
-ENV NODE_ENV development
+WORKDIR /usr/src/app
 
-# Setting up the work directory
-WORKDIR /react-app
+COPY package*.json ./
 
-# Installing dependencies
-COPY ./package.json /react-app
 RUN npm install
+RUN npm install -g concurrently
 
-# Copying all the files in our project
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm", "run", "dev" ]
+
+CMD ["npm", "run", "dev"]
