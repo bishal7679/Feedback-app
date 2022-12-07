@@ -9,8 +9,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-RUN sudo npm install -g concurrently
-RUN sudo npm install -g react-scripts
+RUN npm install -g concurrently
 
 # Bundle app source
 COPY . .
