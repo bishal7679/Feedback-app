@@ -1,3 +1,8 @@
+AWS_DEFAULT_REGION="us-east-1" 
+CLUSTER_NAME="githubAction"
+SERVICE_NAME="Feedback-app-container-service"
+TASK_DEFINITION_NAME="second-run-task-definition"
+DESIRED_COUNT="1"
 ROLE_ARN=`aws ecs describe-task-definition --task-definition "${TASK_DEFINITION_NAME}" --region "${AWS_DEFAULT_REGION}" | jq .taskDefinition.executionRoleArn`
 echo "ROLE_ARN= " $ROLE_ARN
 
