@@ -1,3 +1,5 @@
+[![Deploy to AWS ECS](https://github.com/bishal7679/Feedback-app/actions/workflows/aws.yml/badge.svg?branch=main)](https://github.com/bishal7679/Feedback-app/actions/workflows/aws.yml/badge.svg?branch=main)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
