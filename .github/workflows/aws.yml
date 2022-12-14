@@ -32,16 +32,18 @@ on:
 
 env:
   AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: githubaction           # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: githubaction
+  ECR_REGISTRY: 420235819919.dkr.ecr.us-east-1.amazonaws.com  # set this to your Amazon ECR repository name
   ECS_SERVICE: Feedback-app-container-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: githubAction                 # set this to your Amazon ECS cluster name
-#   ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: second-run-task-definition # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: Feedback-app-container           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
-
-permissions:
-  contents: read
+                                               
+defaults:
+  run:
+    shell: bash
 
 jobs:
   deploy:
@@ -56,8 +58,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-access-key-id: AKIAWDWABXOH26QYMKUQ
-        aws-secret-access-key: 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
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }} # NEED TO SETUP IN GITHUB LATER
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # NEED TO SETUP IN GITHUB LATER
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
@@ -79,13 +81,13 @@ jobs:
         
     - name: Download task definition
       run: |
-        aws ecs describe-task-definition --task-definition second-run-task-definition --query taskDefinition > task-definition.json
+        aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION --query taskDefinition > task-definition.json
 
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task-def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: ./task-definition.json
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-image.outputs.image }}
 
@@ -95,4 +97,4 @@ jobs:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
         service: ${{ env.ECS_SERVICE }}
         cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+        wait-for-service-stability: false
