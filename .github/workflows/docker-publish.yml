@@ -1,0 +1,51 @@
+name: '[Stable] Stable Docker Signed Image Release'
+
+on:
+  schedule:
+    # Monthly release at 12'o clock
+    - cron: "0 12 1 * *"
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version(Optional)
+        default: v1.0.0
+        required: false
+jobs:
+  docker-push-feedback-app-Sign-using-cosign:
+    runs-on: ubuntu-latest
+    environment: deploy
+
+    env:
+      SUPER_SECRET: ${{ secrets.DOCKER_PASS }}
+      FEEDBACK_IMAGE: bishal7679/feedback-app:latest
+
+    name: Install Cosign and test presence in path
+    steps:
+      - uses: actions/checkout@v3
+
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@main
+        # with:
+        #   cosign-release: main
+      - name: Check Version
+        run: |
+          cosign version
+          docker login -u bishal7679 -p "$SUPER_SECRET"
+      - name: Build 🏭 Feedback-app Images
+        run: |
+          echo '[🏭] Building Prod [Feedback-app]'
+          docker build --target prod -t $FEEDBACK_IMAGE . --no-cache
+      - name: push FEEDBACK_IMAGE
+        run: |
+          docker push $FEEDBACK_IMAGE
+      - name: sign
+        run: |
+          echo -n "${{secrets.COSIGN_PASSWORD}}" | cosign sign --key cosign.key -a git_sha=$GITHUB_SHA docker.io/$FEEDBACK_IMAGE
+      - name: verify
+        run: |
+          cosign verify --key cosign.pub -a git_sha=$GITHUB_SHA docker.io/$FEEDBACK_IMAGE | jq .
