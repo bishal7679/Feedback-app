@@ -39,7 +39,7 @@ jobs:
       - name: Build 🏭 Feedback-app Images
         run: |
           echo '[🏭] Building Prod [Feedback-app]'
-          docker build --target prod -t $FEEDBACK_IMAGE . --no-cache
+          docker build -t $FEEDBACK_IMAGE . --no-cache
       - name: push FEEDBACK_IMAGE
         run: |
           docker push $FEEDBACK_IMAGE
