@@ -1,7 +1,7 @@
 # Getting Started with this project
 
 [![Deploy to AWS ECS](https://github.com/bishal7679/Feedback-app/actions/workflows/aws.yml/badge.svg?branch=main)](https://github.com/bishal7679/Feedback-app/actions/workflows/aws.yml/badge.svg?branch=main)
-
+[![Push DockerHub](https://github.com/bishal7679/Feedback-app/actions/workflows/docker-publish.yml/badge.svg?branch=main)](https://github.com/bishal7679/Feedback-app/actions/workflows/docker-publish.yml/badge.svg?branch=main)
 ## Check the image that verified or not
 
 ```bash
